@@ -1,8 +1,8 @@
 # Claude Agent Toolkit
 
-**Simplified AI agent development with decorator-based tools and external MCP server integration**
+**claude-code-sdk wrapper for enhanced developer experience with easy setup and runtime isolation using Docker**
 
-A Python framework that solves the complexity of claude-code-sdk tool integration through an intuitive decorator-based approach. Created to provide a stable, consistent development experience similar to Google's Agent Development Kit (ADK), this toolkit enables effortless creation of Claude Code agents with custom MCP tools and seamless integration with existing MCP servers.
+A Python framework that wraps claude-code-sdk to provide better developer experience through decorator-based tools, runtime isolation, and simplified agent development. Built for production safety with Docker containers that ensure controlled tool execution and consistent behavior across all environments.
 
 ## Table of Contents
 
@@ -25,61 +25,71 @@ A Python framework that solves the complexity of claude-code-sdk tool integratio
 ### The Problem
 Working directly with claude-code-sdk presents two major challenges:
 1. **Complex Tool Integration** - Manual MCP server setup, connection handling, and tool registration
-2. **Inconsistent Execution** - Different local environments causing unpredictable behavior
+2. **Runtime Safety** - Need for controlled tool execution with clean, isolated environments
 
 ### The Solution
 Claude Agent Toolkit solves these issues through:
 - **🎯 Decorator-Based Tools** - Simple `@tool` decorator converts any Python function into a Claude-compatible tool
-- **🐳 Isolated Execution** - Docker containers ensure consistent behavior across all environments
+- **🐳 Runtime Isolation** - Docker containers provide safe, controlled execution with only your specified tools
 - **⚡ Zero Configuration** - Automatic MCP server management and tool discovery
 
-*"An intuitive and stable development experience similar to Google's ADK"* - [Cheolwan Park, Creator](https://blog.codingvillain.com/post/claude-agent-toolkit)
+*"An intuitive and stable development experience similar to Google's ADK"*
 
-### Before vs After
+### See the Difference
 
 **Before (Direct claude-code-sdk):**
 ```python
-# Complex MCP server setup
-# Manual connection management
-# Environment-specific configurations
-# Inconsistent tool behavior
+# Manual tool naming and complex schema definition required
+@tool("greet", "Greet a user", {"name": str})
+async def greet_user(args):
+    return {
+        "content": [
+            {"type": "text", "text": f"Hello, {args['name']}!"}
+        ]
+    }
+
+# Tool functions and MCP server are decoupled - difficult to maintain at scale
+server = create_sdk_mcp_server(
+    name="my-tools",
+    version="1.0.0",
+    tools=[greet_user]
+)
+
+# At Runtime:
+# ❌ Subprocess can access system tools (Read, LS, Grep)
+# ❌ Manual environment configuration required
+# ❌ No control over Claude Code's tool access
+# ❌ Risk of unintended system interactions
 ```
 
 **After (Claude Agent Toolkit):**
 ```python
+# Intuitive class-based tool definition with integrated MCP server
 class CalculatorTool(BaseTool):
     @tool(description="Adds two numbers together")
     async def add(self, a: float, b: float) -> dict:
         return {"result": a + b}
 
+# Single line agent creation with controlled tool access
 agent = Agent(tools=[CalculatorTool()])
+
+# At Runtime:
+# ✅ Docker container runs only your defined tools
+# ✅ No access to system tools (Read, LS, Grep)
+# ✅ Clean, isolated, predictable execution environment
+# ✅ Complete control over Claude Code's capabilities
 ```
 
-## When Should You Use This?
-
-> **Update**: Recent updates to claude-code-sdk have simplified tool addition significantly. This has substantially reduced the necessity for Claude Agent Toolkit compared to when it was first created.
-
-### Use claude-code-sdk When:
-- Building simple agents with basic tooling needs
-- Rapid prototyping and experimentation
-- Utilizing local environment configurations
-- Working with subprocess execution only
-
-### Use Claude Agent Toolkit When:
-- **Isolated Execution Required** - Docker containers for production consistency
-- **CPU-Intensive Tools** - Parallel execution in separate process pools with `parallel=True`
-- **Production Environments** - Consistent execution across different deployments
-- **Complex Tool Orchestration** - Multiple tools with state management
-
-### Quick Comparison
+### Comparison Table
 
 | Feature | claude-code-sdk | Claude Agent Toolkit |
 |---------|----------------|---------------------|
-| **Setup Complexity** | Simple (recent updates) | Minimal with decorators |
-| **Execution** | Same process | Docker/Subprocess isolation |
-| **CPU-Intensive Tasks** | Blocking | Parallel with `parallel=True` |
-| **Environment Consistency** | Variable | Guaranteed with Docker |
-| **Best For** | Prototyping, simple tools | Production, complex tools |
+| **Custom Tools** | Manual schema definition, No parallel execution support | Simple and intuitive class-based definition with `@tool` decorator, Built-in parallel execution with `parallel=True` |
+| **Runtime Isolation** | No built-in isolation<br/>You need to design your own | Docker by default<br/>Allows only tools you explicitly added |
+| **Environment Consistency** | Manual environment setup<br/>Explicit tool/option configuration required | Zero setup needed<br/>Works out of the box |
+| **Setup Complexity** | ~20 lines just for ClaudeCodeOptions configuration | ~25 lines for complete agent with calculator<br/>`Agent.run(verbose=True)` shows all responses |
+| **Built-in Tools** | Build everything from scratch | FileSystemTool with permission control<br/>DataTransferTool for formatted output handling |
+| **Best For** | Using Claude Code as-is<br/>Minimal dependencies only | Fast development<br/>Using Claude Code as reasoning engine (like LangGraph agents) |
 
 ## Quick Start
 
@@ -445,11 +455,12 @@ A Python framework that lets you build AI agents using Claude Code with custom t
 
 ### Do I need Docker?
 
-Docker is recommended for production but not required. Use `ExecutorType.SUBPROCESS` for development:
+Docker is recommended for production but not required. Use `ExecutorType.SUBPROCESS` for subprocess execution:
 
 ```python
 agent = Agent(tools=[my_tool], executor=ExecutorType.SUBPROCESS)
 ```
+It also runs in an isolated directory to ensure maximum isolation.
 
 ### Which model should I use?
 
