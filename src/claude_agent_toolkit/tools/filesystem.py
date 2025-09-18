@@ -131,7 +131,7 @@ class FileSystemTool(BaseTool):
         
         return items
     
-    @tool(description="Lists all accessible files and directories with their permissions")
+    @tool()
     async def list(self) -> Dict[str, Any]:
         """
         List all files and directories with their effective permissions.
@@ -172,7 +172,7 @@ class FileSystemTool(BaseTool):
                 'directories': {}
             }
     
-    @tool(description="Reads and returns the content of a file")
+    @tool()
     async def read(self, filename: str) -> Dict[str, Any]:
         """
         Read file content.
@@ -235,7 +235,7 @@ class FileSystemTool(BaseTool):
                 'content': None
             }
     
-    @tool(description="Writes content to a file, creating or overwriting as needed")
+    @tool()
     async def write(self, filename: str, content: str) -> Dict[str, Any]:
         """
         Write content to file.
@@ -292,7 +292,7 @@ class FileSystemTool(BaseTool):
                 'success': False
             }
     
-    @tool(description="Updates file content by replacing original string with updated string")
+    @tool()
     async def update(self, filename: str, original: str, update: str) -> Dict[str, Any]:
         """
         Update file by replacing original string with updated string.

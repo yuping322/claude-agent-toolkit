@@ -9,20 +9,21 @@ from ..exceptions import ConfigurationError
 
 def tool(
     name: Optional[str] = None,
-    description: str = "",
     *,
     parallel: bool = False,
     timeout_s: int = 60,
 ):
     """
     Decorator to mark methods as MCP tools.
-    
+
     Args:
         name: Tool name (defaults to function name)
-        description: Tool description for MCP
         parallel: Whether the tool runs in a separate process (must be sync function)
         timeout_s: Timeout in seconds for parallel operations
-        
+
+    The tool description is automatically extracted from the function's docstring.
+    If no docstring exists, a default description based on the function name is used.
+
     Validation Rules:
         - parallel=True requires sync function (def, not async def)
         - parallel=False requires async function (async def)
@@ -46,7 +47,7 @@ def tool(
         setattr(fn, "__mcp_tool__", True)
         setattr(fn, "__mcp_meta__", {
             "name": name or fn.__name__,
-            "description": description,
+            "description": fn.__doc__ or f"{fn.__name__} function",
             "parallel": parallel,
             "timeout_s": timeout_s,
         })

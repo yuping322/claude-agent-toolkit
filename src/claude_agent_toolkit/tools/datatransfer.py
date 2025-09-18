@@ -141,11 +141,11 @@ Example: transfer(data={{"field1": "value1", "field2": "value2"}})
 
 🔧 Tool Identity: {tool_class_name} - configured for {model_name} only"""
         
-        # Dynamically update the tool method description
+        # Dynamically update the tool description metadata
         if hasattr(self.transfer, '__mcp_meta__'):
             self.transfer.__mcp_meta__['description'] = description
     
-    @tool(description="Transfer structured data - description will be updated dynamically")
+    @tool()
     async def transfer(self, data: Union[Dict[str, Any], T]) -> Dict[str, Any]:
         """
         Transfer and validate data according to the configured model schema.

@@ -46,12 +46,14 @@ class MyTool(BaseTool):
         super().__init__()
         self.data = {}  # Explicit data management
 
-    @tool(description="Async operation")
+    @tool()
     async def process_async(self, data: str) -> dict:
+        """Async operation"""
         return {"result": f"processed_{data}"}
 
-    @tool(description="Parallel operation", parallel=True, timeout_s=120)
+    @tool(parallel=True, timeout_s=120)
     def process_parallel(self, data: str) -> dict:
+        """Parallel operation"""
         # Sync function - runs in separate process
         return {"result": f"heavy_{data}"}
 ```
@@ -188,10 +190,12 @@ await agent.run(prompt: str, verbose: bool = False, model: str = None) -> str
 ```python
 @tool(
     name: str = None,        # Defaults to function name
-    description: str = "",   # Required for Claude Code
     parallel: bool = False,  # True = sync function, False = async function
     timeout_s: int = 60      # Timeout for parallel operations
 )
+
+# The tool description is automatically extracted from the function's docstring.
+# If no docstring exists, a default description based on the function name is used.
 ```
 
 ### External MCP Tool Classes

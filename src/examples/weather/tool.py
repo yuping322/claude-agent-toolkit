@@ -42,7 +42,7 @@ class WeatherTool(BaseTool):
         if len(self.recent_queries) > 20:
             self.recent_queries = self.recent_queries[-20:]
     
-    @tool(description="Get current weather conditions for a location")
+    @tool()
     async def get_current_weather(self, location: str = "") -> Dict[str, Any]:
         """Get current weather conditions for a specific location."""
         self._record_query(location or "current location", "current_weather")
@@ -74,7 +74,7 @@ class WeatherTool(BaseTool):
                 "message": f"Failed to retrieve weather data for {location}"
             }
     
-    @tool(description="Get weather forecast for a location (1-3 days)")
+    @tool()
     async def get_forecast(self, location: str = "", days: int = 3) -> Dict[str, Any]:
         """Get weather forecast for a specific location."""
         days = max(1, min(days, 3))  # Ensure valid range
@@ -106,7 +106,7 @@ class WeatherTool(BaseTool):
                 "message": f"Failed to retrieve forecast for {location}"
             }
     
-    @tool(description="Get a simple weather summary for a location")
+    @tool()
     async def get_weather_summary(self, location: str = "") -> Dict[str, Any]:
         """Get a brief weather summary for a location."""
         self._record_query(location or "current location", "summary")
@@ -134,7 +134,7 @@ class WeatherTool(BaseTool):
                 "message": f"Failed to retrieve weather summary for {location}"
             }
     
-    @tool(description="Compare weather between two locations")
+    @tool()
     async def compare_weather(self, location1: str, location2: str) -> Dict[str, Any]:
         """Compare current weather conditions between two locations."""
         self._record_query(f"{location1} vs {location2}", "comparison")
@@ -188,7 +188,7 @@ class WeatherTool(BaseTool):
                 "message": f"Failed to compare weather between {location1} and {location2}"
             }
     
-    @tool(description="Add a location to favorites list")
+    @tool()
     async def add_favorite_location(self, location: str, nickname: str = "") -> Dict[str, Any]:
         """Add a location to the favorites list."""
         # Check if already in favorites
@@ -221,7 +221,7 @@ class WeatherTool(BaseTool):
             "favorites_count": len(self.favorite_locations)
         }
     
-    @tool(description="Get recent weather query history")
+    @tool()
     async def get_query_history(self, limit: int = 10) -> Dict[str, Any]:
         """Get the recent weather query history."""
         recent_queries = self.recent_queries[-limit:] if self.recent_queries else []
@@ -234,7 +234,7 @@ class WeatherTool(BaseTool):
             "message": f"Retrieved last {len(recent_queries)} weather queries from history"
         }
     
-    @tool(description="Get favorite locations list")
+    @tool()
     async def get_favorite_locations(self) -> Dict[str, Any]:
         """Get the list of favorite locations."""
         return {
@@ -243,7 +243,7 @@ class WeatherTool(BaseTool):
             "message": f"You have {len(self.favorite_locations)} favorite locations"
         }
     
-    @tool(description="Clear weather query history and reset data")
+    @tool()
     async def clear_history(self) -> Dict[str, Any]:
         """Clear weather query history and reset state."""
         old_count = self.query_count

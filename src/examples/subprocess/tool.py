@@ -15,7 +15,7 @@ class MessageReflector(BaseTool):
         self.call_count = 0
         self.messages = []
     
-    @tool(description="Reflect a message back with timestamp and metadata")
+    @tool()
     async def reflect_message(self, message: str) -> Dict[str, Any]:
         """Reflect a message back with additional metadata using the MessageReflector tool."""
         self.call_count += 1
@@ -39,7 +39,7 @@ class MessageReflector(BaseTool):
         
         return response_data
     
-    @tool(description="Get the history of message reflections from the MessageReflector tool")
+    @tool()
     async def get_reflection_history(self) -> Dict[str, Any]:
         """Get the history of all message reflections."""
         return {
@@ -48,7 +48,7 @@ class MessageReflector(BaseTool):
             "status": f"MessageReflector tool has been called {self.call_count} times"
         }
     
-    @tool(description="Get the current status of the MessageReflector tool")
+    @tool()
     async def get_tool_status(self) -> Dict[str, Any]:
         """Get current status of the MessageReflector tool."""
         return {

@@ -32,7 +32,7 @@ class CalculatorTool(BaseTool):
         if len(self.history) > 50:
             self.history = self.history[-50:]
     
-    @tool(description="Add two numbers together")
+    @tool()
     async def add(self, a: float, b: float) -> Dict[str, Any]:
         """Add two numbers and return the result."""
         result = a + b
@@ -47,7 +47,7 @@ class CalculatorTool(BaseTool):
             "message": f"Added {a} and {b} to get {result}"
         }
     
-    @tool(description="Subtract the second number from the first number")
+    @tool()
     async def subtract(self, a: float, b: float) -> Dict[str, Any]:
         """Subtract b from a and return the result."""
         result = a - b
@@ -62,7 +62,7 @@ class CalculatorTool(BaseTool):
             "message": f"Subtracted {b} from {a} to get {result}"
         }
     
-    @tool(description="Multiply two numbers together")
+    @tool()
     async def multiply(self, a: float, b: float) -> Dict[str, Any]:
         """Multiply two numbers and return the result."""
         result = a * b
@@ -77,7 +77,7 @@ class CalculatorTool(BaseTool):
             "message": f"Multiplied {a} and {b} to get {result}"
         }
     
-    @tool(description="Divide the first number by the second number")
+    @tool()
     async def divide(self, a: float, b: float) -> Dict[str, Any]:
         """Divide a by b and return the result."""
         if b == 0:
@@ -99,7 +99,7 @@ class CalculatorTool(BaseTool):
             "message": f"Divided {a} by {b} to get {result}"
         }
     
-    @tool(description="Raise the first number to the power of the second number using parallel processing", parallel=True, timeout_s=60)
+    @tool(parallel=True, timeout_s=60)
     def power(self, base: float, exponent: float) -> Dict[str, Any]:
         """Raise base to the power of exponent using parallel processing."""
         result = base ** exponent
@@ -115,7 +115,7 @@ class CalculatorTool(BaseTool):
             "parallel_execution": True
         }
     
-    @tool(description="Calculate the square root of a number using parallel processing", parallel=True, timeout_s=30)
+    @tool(parallel=True, timeout_s=30)
     def square_root(self, number: float) -> Dict[str, Any]:
         """Calculate the square root of a number using parallel processing."""
         if number < 0:
@@ -138,7 +138,7 @@ class CalculatorTool(BaseTool):
             "parallel_execution": True
         }
     
-    @tool(description="Get the last calculation result")
+    @tool()
     async def get_last_result(self) -> Dict[str, Any]:
         """Get the result of the last calculation."""
         return {
@@ -147,7 +147,7 @@ class CalculatorTool(BaseTool):
             "message": f"Last result: {self.last_result}"
         }
     
-    @tool(description="Get the calculation history")
+    @tool()
     async def get_history(self, limit: int = 10) -> Dict[str, Any]:
         """Get the recent calculation history."""
         recent_history = self.history[-limit:] if self.history else []
@@ -159,7 +159,7 @@ class CalculatorTool(BaseTool):
             "message": f"Retrieved last {len(recent_history)} operations from history"
         }
     
-    @tool(description="Clear the calculation history and reset data")
+    @tool()
     async def clear_history(self) -> Dict[str, Any]:
         """Clear all calculation history and reset data."""
         self.history = []
@@ -174,7 +174,7 @@ class CalculatorTool(BaseTool):
         }
 
     
-    @tool(description="Calculate factorial of a number using parallel processing", parallel=True, timeout_s=120)
+    @tool(parallel=True, timeout_s=120)
     def factorial(self, n: int) -> Dict[str, Any]:
         """Calculate factorial of n using parallel processing for CPU-intensive computation."""
         if n < 0:
@@ -206,7 +206,7 @@ class CalculatorTool(BaseTool):
             "parallel_execution": True
         }
     
-    @tool(description="Calculate Fibonacci number using parallel processing", parallel=True, timeout_s=120)
+    @tool(parallel=True, timeout_s=120)
     def fibonacci(self, n: int) -> Dict[str, Any]:
         """Calculate the nth Fibonacci number using parallel processing."""
         if n < 0:
@@ -241,7 +241,7 @@ class CalculatorTool(BaseTool):
             "parallel_execution": True
         }
     
-    @tool(description="Check if a number is prime using parallel processing", parallel=True, timeout_s=60)
+    @tool(parallel=True, timeout_s=60)
     def is_prime(self, n: int) -> Dict[str, Any]:
         """Check if a number is prime using parallel processing for CPU-intensive computation."""
         if n < 2:

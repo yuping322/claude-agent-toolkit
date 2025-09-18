@@ -66,8 +66,9 @@ server = create_sdk_mcp_server(
 ```python
 # Intuitive class-based tool definition with integrated MCP server
 class CalculatorTool(BaseTool):
-    @tool(description="Adds two numbers together")
+    @tool()
     async def add(self, a: float, b: float) -> dict:
+        """Adds two numbers together"""
         return {"result": a + b}
 
 # Single line agent creation with controlled tool access
@@ -98,8 +99,9 @@ from claude_agent_toolkit import Agent, BaseTool, tool
 
 # 1. Create a custom tool with @tool decorator
 class CalculatorTool(BaseTool):
-    @tool(description="Adds two numbers together")
+    @tool()
     async def add(self, a: float, b: float) -> dict:
+        """Adds two numbers together"""
         result = a + b
         return {
             "operation": f"{a} + {b}",
@@ -173,8 +175,9 @@ class MyTool(BaseTool):
         super().__init__()
         self.counter = 0  # Explicit data management
 
-    @tool(description="Increment counter and return value")
+    @tool()
     async def increment(self) -> dict:
+        """Increment counter and return value"""
         self.counter += 1
         return {"value": self.counter}
 
@@ -219,8 +222,9 @@ result = await weather_agent.run(
 
 ```python
 class HeavyComputeTool(BaseTool):
-    @tool(description="Heavy computation", parallel=True, timeout_s=120)
+    @tool(parallel=True, timeout_s=120)
     def process_data(self, data: str) -> dict:
+        """Heavy computation"""
         # Sync function - runs in separate process
         import time
         time.sleep(5)  # Simulate heavy work
@@ -410,13 +414,15 @@ class MyTool(BaseTool):
         super().__init__()  # Server starts automatically
         self.data = {}      # Explicit data management
 
-    @tool(description="Async operation")
+    @tool()
     async def process_async(self, data: str) -> dict:
+        """Async operation"""
         # Async operations for I/O, API calls
         return {"result": f"processed_{data}"}
 
-    @tool(description="CPU-intensive operation", parallel=True, timeout_s=60)
+    @tool(parallel=True, timeout_s=60)
     def process_heavy(self, data: str) -> dict:
+        """CPU-intensive operation"""
         # Sync function - runs in separate process
         # Note: New instance created, self.data won't persist
         import time
