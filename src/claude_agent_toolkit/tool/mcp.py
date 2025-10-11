@@ -3,7 +3,7 @@
 
 from typing import Dict, List, Optional
 from .abstract import AbstractTool
-from claude_code_sdk.types import (
+from claude_agent_sdk.types import (
     McpServerConfig,
     McpStdioServerConfig,
     McpHttpServerConfig,

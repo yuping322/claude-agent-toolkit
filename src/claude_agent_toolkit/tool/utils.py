@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Optional
 from mcp import ClientSession
 from mcp.client.streamable_http import streamablehttp_client
 from mcp.client.stdio import stdio_client, StdioServerParameters
-from claude_code_sdk.types import (
+from claude_agent_sdk.types import (
     McpServerConfig,
     McpStdioServerConfig,
     McpSSEServerConfig,

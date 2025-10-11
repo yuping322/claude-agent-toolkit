@@ -5,7 +5,7 @@ import asyncio
 import json
 import os
 import sys
-from claude_code_sdk import query, ClaudeCodeOptions
+from claude_agent_sdk import query, ClaudeAgentOptions
 
 # Model ID mappings removed - now handled in executor.py
 
@@ -67,8 +67,8 @@ async def main():
     print(f"[entrypoint] MCP servers config: {json.dumps(mcp_servers, indent=2)}", file=sys.stderr, flush=True)
     print(f"[entrypoint] Allowed tools: {json.dumps(allowed_tools, indent=2)}", file=sys.stderr, flush=True)
     print(f"[entrypoint] Using model: {model}", file=sys.stderr, flush=True)
-    
-    options = ClaudeCodeOptions(
+
+    options = ClaudeAgentOptions(
         allowed_tools=allowed_tools if allowed_tools else None,
         mcp_servers=mcp_servers if mcp_servers else {},
         system_prompt=system_prompt,

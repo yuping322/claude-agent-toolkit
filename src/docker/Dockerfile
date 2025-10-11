@@ -19,7 +19,7 @@ RUN npm install -g @anthropic-ai/claude-code
 # Install Python packages with optimized compilation
 RUN --mount=type=cache,target=/root/.cache/pip,sharing=locked \
     pip install --no-cache-dir --only-binary=:all: --prefer-binary \
-    claude-code-sdk \
+    claude-agent-sdk>=0.1.3 \
     httpx \
     fastmcp \
     anyio

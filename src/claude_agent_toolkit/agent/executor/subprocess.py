@@ -6,7 +6,7 @@ import os
 import tempfile
 from typing import Any, Dict, List, Optional
 
-from claude_code_sdk import query, ClaudeCodeOptions
+from claude_agent_sdk import query, ClaudeAgentOptions
 
 from .base import BaseExecutor
 from ...constants import MODEL_ID_MAPPING
@@ -103,7 +103,7 @@ class SubprocessExecutor(BaseExecutor):
         
         Args:
             prompt: The instruction for Claude
-            options: ClaudeCodeOptions instance
+            options: ClaudeAgentOptions instance
             handler: ResponseHandler instance
             verbose: Enable verbose logging
             
@@ -194,7 +194,7 @@ class SubprocessExecutor(BaseExecutor):
             with tempfile.TemporaryDirectory(prefix="claude-agent-") as temp_dir:
                 
                 # Setup Claude Code options with temporary directory as working directory
-                options = ClaudeCodeOptions(
+                options = ClaudeAgentOptions(
                     allowed_tools=allowed_tools if allowed_tools else None,
                     mcp_servers=mcp_servers if mcp_servers else {},
                     system_prompt=system_prompt,
