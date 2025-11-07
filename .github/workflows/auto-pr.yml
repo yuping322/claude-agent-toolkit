@@ -68,11 +68,23 @@ jobs:
         which claude
         echo "Testing Claude Code..."
         timeout 10s claude --help || echo "Claude Code help timeout"
-        # Try to authenticate Claude Code
+        # Configure Claude Code to skip onboarding
+        node --eval '
+            const os = require("os");
+            const fs = require("fs");
+            const path = require("path");
+            const homeDir = os.homedir(); 
+            const filePath = path.join(homeDir, ".claude.json");
+            if (fs.existsSync(filePath)) {
+                const content = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+                fs.writeFileSync(filePath, JSON.stringify({ ...content, hasCompletedOnboarding: true }, null, 2));
+            } else {
+                fs.writeFileSync(filePath, JSON.stringify({ hasCompletedOnboarding: true }, null, 2));
+            }'
+        # Set environment variables for Moonshot AI
         export ANTHROPIC_API_KEY="$CLAUDE_CODE_OAUTH_TOKEN"
         export ANTHROPIC_BASE_URL="https://api.moonshot.cn/anthropic/"
-
-        claude auth status || echo "Claude auth check failed"
+        echo "Claude Code configured for Moonshot AI"
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -81,6 +93,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        ANTHROPIC_BASE_URL: "https://api.moonshot.cn/anthropic/"
         ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue_number }}
         ISSUE_TITLE: ${{ github.event.issue.title || inputs.issue_title }}
         ISSUE_BODY: ${{ github.event.issue.body || inputs.issue_body }}
