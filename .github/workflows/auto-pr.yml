@@ -52,12 +52,21 @@ jobs:
     - name: Install dependencies
       run: |
         uv sync
+        source .venv/bin/activate
         python -c "import httpx; print('httpx installed successfully')"
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
     - name: Run issue analyzer
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue_number }}
+        ISSUE_TITLE: ${{ github.event.issue.title || inputs.issue_title }}
+        ISSUE_BODY: ${{ github.event.issue.body || inputs.issue_body }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
       run: |
+        source .venv/bin/activate
         python -c "import sys; print(sys.path)"
         python scripts/auto_fix_issue.py
