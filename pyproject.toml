@@ -51,11 +51,11 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/cheolwanpark/claude-agent-toolkit"
-"Repository" = "https://github.com/cheolwanpark/claude-agent-toolkit.git"
-"Issues" = "https://github.com/cheolwanpark/claude-agent-toolkit/issues"
-"Changelog" = "https://github.com/cheolwanpark/claude-agent-toolkit/blob/main/CHANGELOG.md"
-"Documentation" = "https://github.com/cheolwanpark/claude-agent-toolkit#readme"
+"Homepage" = "https://github.com/yuping322/claude-agent-toolkit"
+"Repository" = "https://github.com/yuping322/claude-agent-toolkit.git"
+"Issues" = "https://github.com/yuping322/claude-agent-toolkit/issues"
+"Changelog" = "https://github.com/yuping322/claude-agent-toolkit/blob/main/CHANGELOG.md"
+"Documentation" = "https://github.com/yuping322/claude-agent-toolkit#readme"
 "Claude Code" = "https://claude.ai/code"
 
 [project.optional-dependencies]

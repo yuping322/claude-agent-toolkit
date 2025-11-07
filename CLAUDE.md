@@ -26,7 +26,7 @@ Custom MCP tools run as HTTP servers on host machine. Claude Code executes in Do
 ### Executors
 
 **DockerExecutor (Default - Production)**:
-- Pre-built image: `cheolwanpark/claude-agent-toolkit:0.2.2`
+- Pre-built image: `yuping322/claude-agent-toolkit:0.2.2`
 - Full isolation with host networking for MCP access
 - Automatic version matching between package and Docker image
 
@@ -263,7 +263,7 @@ result = await agent.run("prompt", verbose=True)
 
 ### Performance
 - Use `parallel=True` for CPU-intensive sync functions
-- Pre-pull Docker image: `docker pull cheolwanpark/claude-agent-toolkit:0.2.2`
+- Pre-pull Docker image: `docker pull yuping322/claude-agent-toolkit:0.2.2`
 - Manage your own data explicitly - no hidden state
 
 ### Security

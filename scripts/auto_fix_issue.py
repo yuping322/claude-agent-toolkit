@@ -19,6 +19,10 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from claude_agent_toolkit import Agent, BaseTool, tool
 from claude_agent_toolkit.tools import FileSystemTool
+
+import httpx
+
+
 async def validate_environment():
     """Validate that all required tools and tokens are available."""
     print("🔍 Validating environment...")
@@ -55,10 +59,7 @@ async def validate_environment():
     return True
 
 
-import httpx
-
-
-async def validate_environment():
+class GitHubTool(BaseTool):
     """Tool for GitHub operations."""
 
     def __init__(self, token: str, repo: str):
@@ -243,7 +244,7 @@ async def main():
     issue_number = int(os.getenv("ISSUE_NUMBER", "0"))
     issue_title = os.getenv("ISSUE_TITLE", "")
     issue_body = os.getenv("ISSUE_BODY", "")
-    repo = os.getenv("GITHUB_REPOSITORY", "cheolwanpark/claude-agent-toolkit")
+    repo = os.getenv("GITHUB_REPOSITORY")
     workspace = os.getenv("GITHUB_WORKSPACE", "/github/workspace")
 
     print(f"🔧 Processing issue #{issue_number}: {issue_title}")

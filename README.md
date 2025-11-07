@@ -158,7 +158,7 @@ export CLAUDE_CODE_OAUTH_TOKEN='your-token-here'
 
 ```bash
 # Clone examples (optional)
-git clone https://github.com/cheolwanpark/claude-agent-toolkit.git
+git clone https://github.com/yuping322/claude-agent-toolkit.git
 cd claude-agent-toolkit/src/examples/calculator
 python main.py
 ```
@@ -510,7 +510,7 @@ The framework is validated through comprehensive examples rather than traditiona
 
 ```bash
 # Clone the repository
-git clone https://github.com/cheolwanpark/claude-agent-toolkit.git
+git clone https://github.com/yuping322/claude-agent-toolkit.git
 cd claude-agent-toolkit
 
 # Set your OAuth token
@@ -561,7 +561,7 @@ python main.py
 ### Development Setup
 
 ```bash
-git clone https://github.com/cheolwanpark/claude-agent-toolkit.git
+git clone https://github.com/yuping322/claude-agent-toolkit.git
 cd claude-agent-toolkit
 uv sync --group dev
 
@@ -578,4 +578,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Created by**: [Cheolwan Park](https://github.com/cheolwanpark) • **Blog**: [Project Background](https://blog.codingvillain.com/post/claude-agent-toolkit)
 
-**Links**: [Homepage](https://github.com/cheolwanpark/claude-agent-toolkit) • [Claude Code](https://claude.ai/code) • [Issues](https://github.com/cheolwanpark/claude-agent-toolkit/issues) • [Model Context Protocol](https://modelcontextprotocol.io/)
+**Links**: [Homepage](https://github.com/yuping322/claude-agent-toolkit) • [Claude Code](https://claude.ai/code) • [Issues](https://github.com/yuping322/claude-agent-toolkit/issues) • [Model Context Protocol](https://modelcontextprotocol.io/)

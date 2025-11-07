@@ -6,7 +6,7 @@ Constants and configuration values for the Claude Agent Toolkit.
 """
 
 # Docker Hub repository configuration
-DOCKER_HUB_REPO = "cheolwanpark/claude-agent-toolkit"
+DOCKER_HUB_REPO = "yuping322/claude-agent-toolkit"
 
 def get_versioned_docker_image():
     """
