@@ -277,7 +277,8 @@ Focus on creating working solutions that:
 
 Be thorough and methodical in your analysis.""",
         tools=[github_tool, code_tool],
-        model="sonnet"
+        model="sonnet",
+        executor="subprocess"  # Use subprocess instead of docker
     )
 
     # Step 1: Analyze the codebase first
