@@ -66,6 +66,11 @@ jobs:
         npm install -g @anthropic-ai/claude-code
         claude --version
         which claude
+        echo "Testing Claude Code..."
+        timeout 10s claude --help || echo "Claude Code help timeout"
+        # Try to authenticate Claude Code
+        export ANTHROPIC_API_KEY="$CLAUDE_CODE_OAUTH_TOKEN"
+        claude auth status || echo "Claude auth check failed"
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
