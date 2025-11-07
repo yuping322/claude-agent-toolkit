@@ -51,7 +51,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        uv sync --group dev
+        uv sync
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
