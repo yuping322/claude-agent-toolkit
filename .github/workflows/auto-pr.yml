@@ -70,6 +70,8 @@ jobs:
         timeout 10s claude --help || echo "Claude Code help timeout"
         # Try to authenticate Claude Code
         export ANTHROPIC_API_KEY="$CLAUDE_CODE_OAUTH_TOKEN"
+        export ANTHROPIC_BASE_URL="https://api.anthropic.com"
+
         claude auth status || echo "Claude auth check failed"
 
     - name: Set up Docker Buildx

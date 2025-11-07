@@ -366,7 +366,7 @@ Remember to provide the exact old content and new content for each file modifica
 This PR was automatically created to fix issue #{issue_number}.
 
 ### Issue Summary
-{issue_title}
+**Issue:** [{issue_title}](https://github.com/{repo}/issues/{issue_number})
 
 {issue_body}
 
