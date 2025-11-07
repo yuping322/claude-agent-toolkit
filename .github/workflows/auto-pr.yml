@@ -51,9 +51,10 @@ jobs:
 
     - name: Install dependencies
       run: |
-        uv sync
+        uv sync --group dev
         source .venv/bin/activate
-        python -c "import httpx; print('httpx installed successfully')"
+        uv pip install -e .
+        python -c "from claude_agent_toolkit import ExecutorType; print('ExecutorType imported successfully')"
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
