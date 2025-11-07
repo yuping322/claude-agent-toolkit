@@ -55,6 +55,14 @@ async def validate_environment():
         print("❌ Cannot check git status")
         return False
 
+    # Check Claude Code CLI
+    try:
+        result = subprocess.run(["claude", "--version"], capture_output=True, text=True, check=True)
+        print(f"✅ Claude Code available: {result.stdout.strip()}")
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Claude Code not available: {e}")
+        return False
+
     print("✅ Environment validation passed")
     return True
 
