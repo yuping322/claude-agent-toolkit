@@ -3,6 +3,20 @@ name: Auto PR from Issue
 on:
   issues:
     types: [opened, labeled]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Issue number to process'
+        required: true
+        type: string
+      issue_title:
+        description: 'Issue title'
+        required: false
+        type: string
+      issue_body:
+        description: 'Issue body'
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -41,9 +55,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-        ISSUE_NUMBER: ${{ github.event.issue.number }}
-        ISSUE_TITLE: ${{ github.event.issue.title }}
-        ISSUE_BODY: ${{ github.event.issue.body }}
+        ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue_number }}
+        ISSUE_TITLE: ${{ github.event.issue.title || inputs.issue_title }}
+        ISSUE_BODY: ${{ github.event.issue.body || inputs.issue_body }}
         GITHUB_REPOSITORY: ${{ github.repository }}
       run: |
         python scripts/auto_fix_issue.py
