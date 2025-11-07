@@ -2,6 +2,16 @@
 
 This GitHub Action automatically analyzes GitHub issues and creates pull requests with fixes using the Claude Agent Toolkit.
 
+## Architecture
+
+The system uses a **pluggable agent architecture** that allows easy switching between different AI providers:
+
+- **BugFixAgentInterface**: Protocol defining the interface for all bug fix agents
+- **ClaudeBugFixAgent**: Implementation using Claude Agent Toolkit (default)
+- **create_bug_fix_agent()**: Factory function to create different agent types
+
+This design makes it easy to add support for new AI agents or compare performance between different providers.
+
 ## How it works
 
 When an issue is created with the `auto-fix` label or containing `auto-fix` in the body, the action will:
@@ -90,12 +100,26 @@ The system can handle various types of issues:
 
 ## Customization
 
-You can modify the behavior by editing the `scripts/auto_fix_issue.py` file:
+You can modify the behavior by editing the `bug_fix/auto_fix_issue.py` file:
 
 - Change the AI model (currently uses "sonnet")
 - Modify the analysis prompts
 - Add custom tools for specific project needs
 - Adjust the PR creation logic
+
+### Adding New Agent Types
+
+To add support for a different AI agent, implement the `BugFixAgentInterface` in `bug_fix_agent.py`:
+
+```python
+class MyCustomAgent:
+    async def analyze_codebase(self): pass
+    async def analyze_issue(self, issue_number, issue_title, issue_body): pass
+    async def create_fix(self, issue_number, issue_title, issue_body): pass
+    async def implement_changes(self): pass
+```
+
+Then update the `create_bug_fix_agent()` factory function to support your new agent type.
 
 ## Troubleshooting
 

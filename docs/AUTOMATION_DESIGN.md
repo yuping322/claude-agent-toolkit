@@ -144,8 +144,8 @@ gh pr create \
 ### 5.7 状态产物
 ```bash
 mkdir -p artifacts/<task-id>
-python scripts/gen_status_json.py --out artifacts/<task-id>/status.json
-python scripts/gen_pr_body.py > artifacts/<task-id>/pr.md
+python bug_fix/gen_status_json.py --out artifacts/<task-id>/status.json
+python bug_fix/gen_pr_body.py > artifacts/<task-id>/pr.md
 ```
 
 ### 5.8 退出码
@@ -285,7 +285,7 @@ Diff | `git diff --shortstat` | 变更统计
 提交 | `git commit -m "feat: ..."` | 原子提交
 推送 | `git push -u origin auto/<id>` | 推送分支
 PR | `gh pr create --title ... --body-file ...` | 创建 PR
-状态输出 | `python scripts/gen_status_json.py` | 生成状态文件
+状态输出 | `python bug_fix/gen_status_json.py` | 生成状态文件
 
 ---
 ## 14. 下一步实施建议

@@ -20,6 +20,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 from claude_agent_toolkit import Agent, BaseTool, tool, ExecutorType
 from claude_agent_toolkit.tools import FileSystemTool
 
+from bug_fix_agent import create_bug_fix_agent
+
 import httpx
 
 
@@ -265,96 +267,31 @@ async def main():
     subprocess.run(["git", "config", "--global", "user.name", "github-actions[bot]"], cwd=workspace)
     subprocess.run(["git", "config", "--global", "user.email", "github-actions[bot]@users.noreply.github.com"], cwd=workspace)
 
-    # Create agent
-    agent = Agent(
-        system_prompt="""You are an expert software engineer who analyzes GitHub issues and creates fixes.
-
-Your task is to:
-1. Analyze the issue title and description carefully
-2. Examine the codebase structure and understand the project
-3. Identify the specific files and code that need to be modified
-4. Create precise code changes to fix the issue
-5. Test that your changes are correct and follow best practices
-6. Provide clear explanations of what was changed
-
-Focus on creating working solutions that:
-- Fix the exact problem described in the issue
-- Follow the project's existing code style and patterns
-- Include appropriate error handling
-- Don't break existing functionality
-
-Be thorough and methodical in your analysis.""",
+    # Create bug fix agent (easily replaceable with different agent implementations)
+    bug_fix_agent = create_bug_fix_agent(
+        agent_type="claude",  # Can be changed to other agent types in the future
         tools=[github_tool, code_tool],
-        model="sonnet",
-        executor=ExecutorType.SUBPROCESS  # Use subprocess executor
+        workspace_path=workspace
     )
 
     # Step 1: Analyze the codebase first
     print("Step 1: Analyzing codebase...")
-    analysis_prompt = """
-Please analyze this codebase structure and key files to understand the project:
-
-1. What type of project is this?
-2. What are the main components/modules?
-3. What coding patterns and conventions are used?
-4. What dependencies and frameworks are involved?
-
-Provide a brief summary of the project architecture.
-"""
-    analysis_result = await agent.run(analysis_prompt)
+    analysis_result = await bug_fix_agent.analyze_codebase()
     print("Codebase analysis:", analysis_result)
 
     # Step 2: Analyze the specific issue
     print("Step 2: Analyzing issue...")
-    issue_analysis_prompt = f"""
-Now analyze this specific GitHub issue:
-
-ISSUE #{issue_number}
-Title: {issue_title}
-Description:
-{issue_body}
-
-Based on your understanding of the codebase, please:
-1. What exactly is the problem described in this issue?
-2. Which files are likely involved?
-3. What type of fix is needed (bug fix, feature addition, documentation, etc.)?
-4. What specific changes need to be made?
-
-Be very specific about which files and functions need to be modified.
-"""
-    issue_analysis = await agent.run(issue_analysis_prompt)
+    issue_analysis = await bug_fix_agent.analyze_issue(issue_number, issue_title, issue_body)
     print("Issue analysis:", issue_analysis)
 
     # Step 3: Create the fix
     print("Step 3: Creating fix...")
-    fix_prompt = f"""
-Based on your analysis, please create a fix for this issue:
-
-ISSUE #{issue_number}: {issue_title}
-
-Please:
-1. Identify the exact files that need to be modified
-2. Show the specific code changes needed
-3. Explain why these changes fix the problem
-4. Ensure the changes follow the project's coding standards
-
-If you need to examine specific files, use the available tools to read their contents first.
-"""
-    fix_result = await agent.run(fix_prompt)
+    fix_result = await bug_fix_agent.create_fix(issue_number, issue_title, issue_body)
     print("Fix created:", fix_result)
 
     # Step 4: Implement the changes
     print("Step 4: Implementing changes...")
-    implementation_prompt = f"""
-Now implement the fix you designed:
-
-1. Use the modify_file tool to make the necessary code changes
-2. Make sure each change is precise and correct
-3. Test that the changes look right by reading the modified files
-
-Remember to provide the exact old content and new content for each file modification.
-"""
-    implementation_result = await agent.run(implementation_prompt)
+    implementation_result = await bug_fix_agent.implement_changes()
     print("Changes implemented:", implementation_result)
 
     # Create branch and PR
