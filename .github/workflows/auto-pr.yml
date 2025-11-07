@@ -70,7 +70,7 @@ jobs:
         timeout 10s claude --help || echo "Claude Code help timeout"
         # Try to authenticate Claude Code
         export ANTHROPIC_API_KEY="$CLAUDE_CODE_OAUTH_TOKEN"
-        export ANTHROPIC_BASE_URL="https://api.anthropic.com"
+        export ANTHROPIC_BASE_URL="https://api.moonshot.cn/anthropic/"
 
         claude auth status || echo "Claude auth check failed"
 
