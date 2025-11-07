@@ -26,7 +26,12 @@ permissions:
 jobs:
   analyze-and-fix:
     runs-on: ubuntu-latest
-    if: contains(github.event.issue.labels.*.name, 'auto-fix') || contains(github.event.issue.body, 'auto-fix')
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issues' && (
+        contains(github.event.issue.labels.*.name, 'auto-fix') ||
+        contains(github.event.issue.body, 'auto-fix')
+      ))
 
     steps:
     - name: Checkout repository
