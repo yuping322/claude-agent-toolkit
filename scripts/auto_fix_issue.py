@@ -17,7 +17,7 @@ from typing import Dict, Any, Optional
 # Add src to path to import claude_agent_toolkit
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from claude_agent_toolkit import Agent, BaseTool, tool
+from claude_agent_toolkit import Agent, BaseTool, tool, ExecutorType
 from claude_agent_toolkit.tools import FileSystemTool
 
 import httpx
@@ -278,7 +278,7 @@ Focus on creating working solutions that:
 Be thorough and methodical in your analysis.""",
         tools=[github_tool, code_tool],
         model="sonnet",
-        executor="subprocess"  # Use subprocess instead of docker
+        executor=ExecutorType.SUBPROCESS  # Use subprocess executor
     )
 
     # Step 1: Analyze the codebase first
