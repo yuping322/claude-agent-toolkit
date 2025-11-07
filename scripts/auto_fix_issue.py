@@ -399,9 +399,16 @@ Please review the changes and test them thoroughly before merging.
             # Push branch
             subprocess.run(["git", "push", "origin", branch_name], check=True, cwd=workspace)
 
-            # Create PR using GitHub API
-            pr = await github_tool.create_pull_request(pr_title, pr_body, branch_name)
-            print(f"✅ Created PR: {pr['html_url']}")
+            # Try to create PR using GitHub API
+            try:
+                pr = await github_tool.create_pull_request(pr_title, pr_body, branch_name)
+                print(f"✅ Created PR: {pr['html_url']}")
+            except Exception as pr_error:
+                print(f"⚠️  Could not create PR automatically: {pr_error}")
+                print(f"📝 Please create a PR manually from branch '{branch_name}' to main")
+                print(f"🔗 Branch URL: https://github.com/{repo}/tree/{branch_name}")
+                print(f"📋 Suggested PR title: {pr_title}")
+                print(f"📄 Suggested PR body:\n{pr_body}")
         else:
             print("❌ No changes to commit")
 
