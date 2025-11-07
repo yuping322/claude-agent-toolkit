@@ -16,5 +16,8 @@ wheels/
 .serena
 .claude
 
+# IDE
+.vscode/
+
 # others
 log.txt

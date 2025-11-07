@@ -43,6 +43,7 @@ dependencies = [
     "claude-agent-sdk>=0.1.3",
     "docker>=7.1.0",
     "fastmcp>=2.12.2",
+    "GitPython>=3.1.0",
     "httpx>=0.28.1",
     "jsonpatch>=1.33",
     "mcp>=1.3.0",
