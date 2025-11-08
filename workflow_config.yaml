@@ -1,0 +1,39 @@
+
+meta:
+  environment: workflow_demo
+  version: 1.0
+logging:
+  level: INFO
+observability:
+  enable: true
+sandbox:
+  default_strategy: subprocess
+  strategies:
+    subprocess:
+      max_concurrency: 2
+      hard_cpu_limit_pct: 80
+      memory_limit_mb: 512
+model_providers:
+  workflow_provider:
+    type: openrouter
+    api_key: demo_key_12345
+    base_url: https://openrouter.ai/api/v1
+    model: anthropic/claude-3-haiku
+mcp_services: {}
+agents:
+  code_analyzer:
+    model_provider: workflow_provider
+    dependency_pools: [workspace_pool]
+dependency_pools:
+  workspace_pool:
+    type: filesystem
+    paths: ["/var/folders/j9/7zb3x9657rj5ptnfbbb6q1740000gn/T/workflow_claude-agent-toolkit_1zaujp22"]
+tools:
+  filesystem_tool:
+    type: filesystem
+    config:
+      root_path: "/var/folders/j9/7zb3x9657rj5ptnfbbb6q1740000gn/T/workflow_claude-agent-toolkit_1zaujp22"
+  datatransfer_tool:
+    type: datatransfer
+    config:
+      max_transfer_size: 1048576
