@@ -379,3 +379,123 @@ class FileSystemTool(BaseTool):
                 'success': False,
                 'replacements': 0
             }
+
+
+class FileSystemAccessor:
+    """
+    Simple filesystem accessor without MCP server.
+    Used by dependency pools for direct filesystem operations.
+    """
+
+    def __init__(self, allowed_paths: List[str]):
+        """
+        Initialize filesystem accessor with allowed paths.
+
+        Args:
+            allowed_paths: List of allowed directory paths
+        """
+        self.allowed_paths = [os.path.abspath(path.rstrip('/')) for path in allowed_paths]
+
+    def _is_path_allowed(self, path: str) -> bool:
+        """Check if a path is within allowed directories."""
+        abs_path = os.path.abspath(path)
+        for allowed_path in self.allowed_paths:
+            if abs_path.startswith(allowed_path):
+                return True
+        return False
+
+    def list_directory(self, path: str) -> Dict[str, Any]:
+        """List contents of a directory."""
+        if not self._is_path_allowed(path):
+            return {
+                'error': f'Access denied: {path}',
+                'success': False,
+                'contents': []
+            }
+
+        try:
+            abs_path = os.path.abspath(path)
+            if not os.path.exists(abs_path):
+                return {
+                    'error': f'Path does not exist: {path}',
+                    'success': False,
+                    'contents': []
+                }
+
+            if not os.path.isdir(abs_path):
+                return {
+                    'error': f'Path is not a directory: {path}',
+                    'success': False,
+                    'contents': []
+                }
+
+            contents = []
+            for item in os.listdir(abs_path):
+                item_path = os.path.join(abs_path, item)
+                contents.append({
+                    'name': item,
+                    'path': item_path,
+                    'is_directory': os.path.isdir(item_path),
+                    'size': os.path.getsize(item_path) if os.path.isfile(item_path) else 0
+                })
+
+            return {
+                'success': True,
+                'path': path,
+                'contents': contents
+            }
+
+        except Exception as e:
+            return {
+                'error': f'Failed to list directory {path}: {str(e)}',
+                'success': False,
+                'contents': []
+            }
+
+    def read_file(self, filename: str) -> Dict[str, Any]:
+        """Read contents of a file."""
+        if not self._is_path_allowed(filename):
+            return {
+                'error': f'Access denied: {filename}',
+                'success': False,
+                'content': ''
+            }
+
+        try:
+            abs_path = os.path.abspath(filename)
+            if not os.path.exists(abs_path):
+                return {
+                    'error': f'File does not exist: {filename}',
+                    'success': False,
+                    'content': ''
+                }
+
+            if not os.path.isfile(abs_path):
+                return {
+                    'error': f'Path is not a file: {filename}',
+                    'success': False,
+                    'content': ''
+                }
+
+            with open(abs_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+
+            return {
+                'success': True,
+                'filename': filename,
+                'content': content,
+                'size': len(content)
+            }
+
+        except UnicodeDecodeError:
+            return {
+                'error': f'Cannot decode file as UTF-8: {filename}',
+                'success': False,
+                'content': ''
+            }
+        except Exception as e:
+            return {
+                'error': f'Failed to read file {filename}: {str(e)}',
+                'success': False,
+                'content': ''
+            }

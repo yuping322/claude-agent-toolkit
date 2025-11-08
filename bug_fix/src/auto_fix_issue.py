@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 from claude_agent_toolkit import Agent, BaseTool, tool, ExecutorType
 from claude_agent_toolkit.tools import FileSystemTool
 
-from bug_fix_agent import create_bug_fix_agent
+from .bug_fix_agent import create_bug_fix_agent
 
 import httpx
 

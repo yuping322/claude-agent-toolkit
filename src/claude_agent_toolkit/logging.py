@@ -6,6 +6,21 @@ import sys
 from enum import Enum
 from typing import Optional, TextIO, Union
 
+# Event bus integration (optional, lazy import to avoid circular issues during package init)
+try:
+    from .system.observability import event_bus, LogEvent
+except Exception:  # pragma: no cover - event bus may not be ready very early
+    event_bus = None
+    LogEvent = None
+
+def _get_event_bus():
+    """Lazy import of event bus to handle circular imports."""
+    try:
+        from .system.observability import event_bus as eb, LogEvent as le
+        return eb, le
+    except Exception:
+        return None, None
+
 
 class LogLevel(str, Enum):
     """Logging level options for claude-agent-toolkit."""
@@ -38,12 +53,30 @@ def get_logger(name: str) -> logging.Logger:
     return logging.getLogger(f'claude_agent_toolkit.{name}')
 
 
+class _EventBusLogHandler(logging.Handler):
+    """Logging handler that forwards records to the observability event bus as LogEvent."""
+    def emit(self, record: logging.LogRecord) -> None:  # pragma: no cover - simple forwarder
+        eb, le = _get_event_bus()
+        if eb and le:
+            try:
+                eb.publish(le(
+                    event_type="log",
+                    level=record.levelname,
+                    message=self.format(record),
+                    component=record.name,
+                    data={}
+                ))
+            except Exception:
+                # Never break normal logging
+                pass
+
 def set_logging(
     level: Union[LogLevel, str] = LogLevel.WARNING,
     format: Optional[str] = None,
     stream: TextIO = sys.stderr,
     show_time: bool = False,
-    show_level: bool = False
+    show_level: bool = False,
+    forward_events: bool = True
 ) -> None:
     """Configure logging output for claude-agent-toolkit.
     
@@ -101,7 +134,14 @@ def set_logging(
     # Create new handler with specified configuration
     _handler = logging.StreamHandler(stream)
     _handler.setLevel(getattr(logging, level.upper()))
-    _handler.setFormatter(logging.Formatter(format))
-    
-    # Add handler to root logger
+    formatter = logging.Formatter(format)
+    _handler.setFormatter(formatter)
     _root_logger.addHandler(_handler)
+
+    # Attach event bus forwarding handler if enabled
+    eb, le = _get_event_bus()
+    if forward_events and eb and le:
+        eb_handler = _EventBusLogHandler()
+        eb_handler.setLevel(getattr(logging, level.upper()))
+        eb_handler.setFormatter(formatter)
+        _root_logger.addHandler(eb_handler)

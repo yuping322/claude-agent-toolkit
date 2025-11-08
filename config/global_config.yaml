@@ -1,0 +1,51 @@
+meta:
+  environment: dev
+  version: 1
+logging:
+  level: INFO
+  sinks:
+    - type: stdout
+observability:
+  enable: true
+  event_buffer_size: 5000
+  exporters:
+    - type: stdout
+sandbox:
+  default_strategy: subprocess
+  strategies:
+    subprocess:
+      max_concurrency: 8
+      hard_cpu_limit_pct: 85
+    docker:
+      max_concurrency: 4
+      hard_cpu_limit_pct: 70
+      memory_limit_mb: 2048
+      network_policy: deny-all
+model_providers:
+  openrouter_primary:
+    type: openrouter
+    api_key: ${OPENROUTER_KEY}
+    base_url: https://openrouter.ai/api/v1
+    pricing:
+      input_token_usd: 0.0000015
+      output_token_usd: 0.000002
+mcp_services:
+  fs_local:
+    type: filesystem
+    root: /workspace
+  git_ops:
+    type: git
+    extras:
+      default_branch: main
+agents:
+  bug_fixer:
+    model_provider: openrouter_primary
+    sandbox_strategy: subprocess
+    tools: [fs_local, git_ops]
+    dependency_pools: [filesystem_pool]
+    max_context_tokens: 120000
+dependency_pools:
+  filesystem_pool:
+    type: filesystem
+    paths: [/workspace, /tmp]
+    max_instances: 5

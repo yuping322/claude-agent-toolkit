@@ -1,5 +1,70 @@
 # Claude Agent Toolkit
 
+**统一平台架构的Claude Code Agent框架**
+
+一个完整的平台，用于构建、管理和运行Claude Code agents。提供统一配置、依赖池管理、模型抽象、沙箱执行和事件观测等企业级功能。
+
+## 🚀 快速开始 - 完整流程
+
+### 1. 安装依赖
+
+```bash
+pip install claude-agent-toolkit
+```
+
+### 2. 创建配置文件
+
+```yaml
+# config.yaml
+meta:
+  environment: dev
+  version: 1
+
+logging:
+  level: INFO
+  forward_events: true
+
+model_providers:
+  openrouter_primary:
+    type: openrouter
+    api_key: ${OPENROUTER_KEY}
+    base_url: https://openrouter.ai/api/v1
+    pricing:
+      input_token_usd: 0.0000015
+      output_token_usd: 0.000002
+
+agents:
+  code_analyzer:
+    model_provider: openrouter_primary
+    dependency_pools: [filesystem_pool]
+
+dependency_pools:
+  filesystem_pool:
+    type: filesystem
+    paths: [/tmp, /workspace]
+```
+
+### 3. 设置环境变量
+
+```bash
+export OPENROUTER_KEY="your_api_key_here"
+```
+
+### 4. 运行完整流程演示
+
+```bash
+python full_flow_example.py
+```
+
+这个演示展示了完整的系统功能：配置加载、依赖池管理、沙箱执行和事件观测。
+
+## 📖 详细文档
+
+- **[配置指南](CONFIGURATION.md)** - 完整的配置选项和环境变量说明
+- **[统一平台设计](docs/UNIFIED_PLATFORM_DESIGN.md)** - 架构设计和组件说明
+
+---
+
 **claude-code-sdk wrapper for enhanced developer experience with easy setup and runtime isolation using Docker**
 
 A Python framework that wraps claude-code-sdk to provide better developer experience through decorator-based tools, runtime isolation, and simplified agent development. Built for production safety with Docker containers that ensure controlled tool execution and consistent behavior across all environments.

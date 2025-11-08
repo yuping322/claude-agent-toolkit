@@ -47,6 +47,7 @@ dependencies = [
     "httpx>=0.28.1",
     "jsonpatch>=1.33",
     "mcp>=1.3.0",
+    "psutil>=5.9.0",
     "uvicorn>=0.35.0",
 ]
 

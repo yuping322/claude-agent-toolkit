@@ -1,0 +1,45 @@
+edition: 3.0.0
+name: sleepless-agent-fc
+access: "your-access"
+
+services:
+  fc:
+    component: fc
+    props:
+      region: cn-hangzhou
+      service:
+        name: sleepless-agent
+        description: 任务执行服务（单容器）
+      function:
+        name: task-runner
+        description: 任务提交、运行、查询（支持并发、无状态）
+        runtime: custom
+        timeout: 900  # 15 分钟（最大）
+        memorySize: 2048
+        cpu: 1
+        # 并发配置（可选，默认由 FC 自动管理）
+        # 注意：FC 会自动创建多个函数实例处理并发请求
+        # 每个实例是独立的、无状态的，使用 OSS 共享存储
+        # 使用容器镜像
+        customContainerConfig:
+          image: registry.cn-hangzhou.aliyuncs.com/your-namespace/sleepless-agent-fc:latest
+          command: ["/app/bootstrap.sh"]
+          port: 9000
+        environmentVariables:
+          OSS_MOUNT_PATH: /mnt/oss  # OSS 本地挂载路径
+          # Claude Code CLI 配置（必须）
+          ANTHROPIC_API_KEY: ${env.ANTHROPIC_API_KEY}
+          ANTHROPIC_BASE_URL: ${env.ANTHROPIC_BASE_URL}
+          # Git 配置（可选，建议通过请求参数传递）
+          # 注意：git_repo_url 必须从请求参数获取，每个任务可能使用不同的仓库
+          GIT_BRANCH: ${env.GIT_BRANCH}  # 默认分支（如果请求中未提供）
+          GITHUB_TOKEN: ${env.GITHUB_TOKEN}  # 用于推送和创建 PR（私有仓库拉取也需要）
+      triggers:
+        - name: httpTrigger
+          type: http
+          config:
+            authType: anonymous
+            methods:
+              - GET
+              - POST
+
